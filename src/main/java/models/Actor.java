@@ -8,22 +8,11 @@ import java.util.Objects;
  */
 @Entity
 @Table(name="Actors")
-@NamedQueries({
-        @NamedQuery(
-                name = "models.Actor.findAll",
-                query = "Select a from Actors a"
-        )
-})
 public class Actor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "birthDate", nullable = false)
     private String birthDate;
+    private Movie movie;
 
     public Actor() {
     }
@@ -33,6 +22,17 @@ public class Actor {
         this.birthDate = birthDate;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -41,12 +41,22 @@ public class Actor {
         this.name = name;
     }
 
+    @Column(name = "birthDate", nullable = false)
     public String getBirthDate() {
         return birthDate;
     }
 
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
+    }
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 
     @Override

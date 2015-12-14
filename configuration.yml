@@ -1,6 +1,3 @@
-template: Hello, %s!
-defaultName: Stranger
-
 database:
 
   # the name of your JDBC driver
@@ -13,4 +10,9 @@ database:
   password: sa
 
   # the JDBC URL
-  url: jdbc:h2:./target/example
+  url: jdbc:h2:./target/initial
+
+  #Properties specific to selected driver
+  properties:
+      charSet: UTF-8
+      hibernate.dialect: org.hibernate.dialect.H2Dialect

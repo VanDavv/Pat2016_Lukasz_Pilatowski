@@ -23,15 +23,17 @@ public class ActorDAO extends AbstractDAO<Actor> {
     }
 
     public List<Actor> findAll() {
-        return list(namedQuery("models.Actor.findAll"));
+        return list(currentSession().createCriteria(Actor.class));
     }
 
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         Optional<Actor> actor = Optional.fromNullable(get(id));
         if(actor.isPresent()) {
-            currentSession().delete(get(id));
-            return true;
+            Actor o = get(id);
+            currentSession().delete(o);
         }
-        return false;
+    }
+    public Actor update(Actor actor) {
+        return persist(actor);
     }
 }

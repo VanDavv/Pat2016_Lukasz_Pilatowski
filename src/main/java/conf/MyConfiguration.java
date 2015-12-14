@@ -2,32 +2,21 @@ package conf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
-import org.hibernate.validator.constraints.NotEmpty;
+import io.dropwizard.db.DataSourceFactory;
 
 /**
  * Created by VanDavv on 2015-12-12.
  */
 public class MyConfiguration extends Configuration {
-    @NotEmpty
-    private String template;
 
-    @NotEmpty
-    private String defaultName = "Stranger";
+    private DataSourceFactory database;
 
-    @JsonProperty
-    public String getTemplate() {
-        return template;
+    @JsonProperty("database")
+    public DataSourceFactory getDataSourceFactory() {
+        return database;
     }
-    @JsonProperty
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-    @JsonProperty
-    public String getDefaultName() {
-        return defaultName;
-    }
-    @JsonProperty
-    public void setDefaultName(String defaultName) {
-        this.defaultName = defaultName;
+    @JsonProperty("database")
+    public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
+        this.database = dataSourceFactory;
     }
 }

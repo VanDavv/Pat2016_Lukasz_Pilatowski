@@ -9,21 +9,9 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "Movies")
-@NamedQueries({
-        @NamedQuery(
-                name = "models.Movie.findAll",
-                query = "Select m from Movies m"
-        )
-})
 public class Movie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "movieName")
     private String movieName;
-
-    @ElementCollection
     private List<Actor> actors;
 
     public Movie() {
@@ -34,25 +22,33 @@ public class Movie {
         this.actors = actors;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+    public void setMovieName(String movieName) {
+        this.movieName = movieName;
+    }
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "movieId")
     public long getId() {
         return id;
     }
 
+    @Column(name = "movieName", nullable = false)
     public String getMovieName() {
         return movieName;
     }
 
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
-    }
-
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "movie")
     public List<Actor> getActors() {
         return actors;
     }
 
-    public void setActors(List<Actor> actors) {
-        this.actors = actors;
-    }
 
     @Override
     public boolean equals(Object o) {
