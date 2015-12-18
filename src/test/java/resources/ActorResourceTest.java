@@ -22,10 +22,10 @@ import static org.mockito.Mockito.*;
  * Created by 304-03 on 2015-12-14.
  */
 public class ActorResourceTest {
-    private static final ActorDAO actorDAO = mock(ActorDAO.class);
+    private static final ActorDAO DAO = mock(ActorDAO.class);
     @ClassRule
     public static final ResourceTestRule RULE = ResourceTestRule.builder()
-            .addResource(new ActorResource(actorDAO))
+            .addResource(new ActorResource(DAO))
             .setTestContainerFactory(new GrizzlyWebTestContainerFactory())
             .build();
     private Actor actor;
@@ -33,84 +33,105 @@ public class ActorResourceTest {
     @Before
     public void setup() {
         actor = new Actor();
-        actor.setId(1L);
+        actor.setId(0L);
         actor.setBirthDate("12-03-2014");
         actor.setName("Karol Marks");
     }
 
     @After
     public void tearDown() {
-        reset(actorDAO);
+        reset(DAO);
     }
 
     @Test
     public void getActor() {
-        when(actorDAO.findById(1L)).thenReturn(Optional.of(actor));
+        when(DAO.findById(1L)).thenReturn(Optional.of(actor));
 
         final Response response = RULE.getJerseyTest().target("/actors/1").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(actorDAO).findById(1L);
+        verify(DAO).findById(1L);
     }
 
     @Test
     public void getActorNotFound() {
-        when(actorDAO.findById(2L)).thenReturn(Optional.<Actor>absent());
+        when(DAO.findById(2L)).thenReturn(Optional.<Actor>absent());
         final Response response = RULE.getJerseyTest().target("/actors/2").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(actorDAO).findById(2L);
+        verify(DAO).findById(2L);
     }
 
     @Test
     public void deleteActor() {
-        when(actorDAO.findById(1L)).thenReturn(Optional.of(actor));
+        when(DAO.findById(1L)).thenReturn(Optional.of(actor));
         final Response response = RULE.getJerseyTest().target("/actors/1").request().delete();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(actorDAO).delete(1L);
+        verify(DAO).delete(1L);
     }
 
     @Test
     public void deleteNotFoundActor() {
-        when(actorDAO.findById(2L)).thenReturn(Optional.<Actor>absent());
+        when(DAO.findById(2L)).thenReturn(Optional.<Actor>absent());
         final Response response = RULE.getJerseyTest().target("/actors/2").request().delete();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(actorDAO).findById(2L);
+        verify(DAO).findById(2L);
     }
     @Test
      public void updateActor() {
-        when(actorDAO.findById(1L)).thenReturn(Optional.of(actor));
-        final Response response = RULE.getJerseyTest().target("/actors/1").request().put(Entity.text(""));
+        when(DAO.findById(1L)).thenReturn(Optional.of(actor));
+        final Response response = RULE.getJerseyTest().target("/actors/1").request().put(
+                Entity.json(
+                        new ActorResource.RequestBody(
+                                actor.getName(),
+                                actor.getBirthDate()
+                        )
+                )
+        );
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(actorDAO).update(actor);
+        verify(DAO).update(actor);
     }
 
     @Test
     public void updateNotFoundActor() {
-        when(actorDAO.findById(2L)).thenReturn(Optional.<Actor>absent());
-        final Response response = RULE.getJerseyTest().target("/actors/2").request().put(Entity.text(""));
+        when(DAO.findById(2L)).thenReturn(Optional.<Actor>absent());
+        final Response response = RULE.getJerseyTest().target("/actors/2").request().put(
+                Entity.json(
+                        new ActorResource.RequestBody(
+                                actor.getName(),
+                                actor.getBirthDate()
+                        )
+                )
+        );
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(actorDAO).findById(2L);
+        verify(DAO).findById(2L);
     }
     @Test
     public void getActors() {
-        when(actorDAO.findAll()).thenReturn(Arrays.asList(actor));
+        when(DAO.findAll()).thenReturn(Arrays.asList(actor));
         final Response response = RULE.getJerseyTest().target("/actors").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(actorDAO).findAll();
+        verify(DAO).findAll();
     }
     @Test
     public void postActor() {
         Actor any = any(Actor.class);
-        when(actorDAO.create(any)).thenReturn(actor);
-        final Response response = RULE.getJerseyTest().target("/actors").request().post(Entity.text(""));
+        when(DAO.create(any)).thenReturn(actor);
+        final Response response = RULE.getJerseyTest().target("/actors").request().post(
+                Entity.json(
+                        new ActorResource.RequestBody(
+                                actor.getName(),
+                                actor.getBirthDate()
+                        )
+                )
+        );
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(actorDAO).create((Actor)notNull());
+        verify(DAO).create(actor);
     }
 }
