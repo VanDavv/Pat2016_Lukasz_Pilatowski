@@ -33,7 +33,7 @@ public class MovieResource {
         @JsonProperty("movieName")
         private String movieName;
 
-        @JsonProperty(value = "actors")
+        @JsonProperty("actors")
         private List<Actor> actors;
 
 
@@ -63,7 +63,7 @@ public class MovieResource {
             return new Saying("Added : " + movie.toString());
         }
 
-        Movie movie = movieDao.create(new Movie(requestBody.getMovieName(), actors.get()));
+        Movie movie = movieDao.create(new Movie(requestBody.getMovieName(), actors.orNull()));
         return new Saying("Added : " + movie.toString());
     }
 
