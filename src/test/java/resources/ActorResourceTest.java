@@ -12,15 +12,11 @@ import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-/**
- * Created by 304-03 on 2015-12-14.
- */
 public class ActorResourceTest {
     private static final ActorDAO DAO = mock(ActorDAO.class);
     @ClassRule

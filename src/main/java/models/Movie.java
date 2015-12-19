@@ -4,13 +4,11 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Created by VanDavv on 2015-12-13.
- */
 @Entity
 @Table(name = "Movies")
 public class Movie {
     private long id;
+
     private String movieName;
     private List<Actor> actors;
 

@@ -1,16 +1,17 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.Objects;
 
-/**
- * Created by VanDavv on 2015-12-13.
- */
 @Entity
 @Table(name="Actors")
 public class Actor {
     private long id;
+    @JsonProperty(value = "name")
     private String name;
+    @JsonProperty(value = "birthDate")
     private String birthDate;
     private Movie movie;
 

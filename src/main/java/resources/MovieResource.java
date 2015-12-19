@@ -2,64 +2,77 @@ package resources;
 
 import api.Saying;
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
-import db.ActorDAO;
 import db.MovieDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 import models.Actor;
 import models.Movie;
 
 import javax.ws.rs.*;
-import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by VanDavv on 2015-12-13.
- */
 
 @Path("/movies")
 @Produces("application/json")
 public class MovieResource {
     private final MovieDAO movieDao;
-    private final ActorDAO actorDAO;
 
-    public MovieResource(MovieDAO movieDao, ActorDAO actorDAO) {
+    public MovieResource(MovieDAO movieDao) {
         this.movieDao = movieDao;
-        this.actorDAO = actorDAO;
     }
 
-    private List<Actor> getActorsByIds(List<Long> ids) {
-        List<Actor> actors = new ArrayList<>();
-        for(long id : ids) {
-            Optional<Actor> actor = actorDAO.findById(id);
-            if(!actor.isPresent()) continue;
-
-            actors.add(actor.get());
+    public static class RequestBody {
+        public RequestBody() {
         }
-        return actors;
+
+        public RequestBody(String movieName, List<Actor> actors) {
+            this.movieName = movieName;
+            this.actors = actors;
+        }
+
+        @JsonProperty("movieName")
+        private String movieName;
+
+        @JsonProperty(value = "actors")
+        private List<Actor> actors;
+
+
+        public String getMovieName() {
+            return movieName;
+        }
+
+        public void setMovieName(String movieName) {
+            this.movieName = movieName;
+        }
+
+        public List<Actor> getActors() {
+            return actors;
+        }
+
+        public void setActors(List<Actor> actors) {
+            this.actors = actors;
+        }
     }
 
     @POST
     @UnitOfWork
-    public Saying postMovie(@HeaderParam("movieName") String movieName,
-                            @HeaderParam("actors") List<Long> paramIds) {
-        Optional<List<Long>> ids = Optional.fromNullable(paramIds);
-        if(!ids.isPresent()) {
-            Movie movie = movieDao.create(new Movie(movieName, null));
+    public Saying postMovie(RequestBody requestBody) {
+        Optional<List<Actor>> actors = Optional.fromNullable(requestBody.getActors());
+        if(!actors.isPresent()) {
+            Movie movie = movieDao.create(new Movie(requestBody.getMovieName(), null));
             return new Saying("Added : " + movie.toString());
         }
 
-        Movie movie = movieDao.create(new Movie(movieName, getActorsByIds(ids.get())));
+        Movie movie = movieDao.create(new Movie(requestBody.getMovieName(), actors.get()));
         return new Saying("Added : " + movie.toString());
     }
 
     @PUT
     @UnitOfWork
     @Path("/{movieId}")
-    public Saying updateMovie(@HeaderParam("movieName") Optional<String> movieName,
-                              @HeaderParam("actors") List<Long> paramIds,
-                              @PathParam("movieId") long id) {
-        Optional<List<Long>> ids = Optional.fromNullable(paramIds);
+    public Saying updateMovie(RequestBody requestBody, @PathParam("movieId") long id) {
+        Optional<List<Actor>> actors = Optional.fromNullable(requestBody.getActors());
+        Optional<String> movieName = Optional.fromNullable(requestBody.getMovieName());
 
         Optional<Movie> optionalMovie = movieDao.findById(id);
         if(!optionalMovie.isPresent())
@@ -67,7 +80,7 @@ public class MovieResource {
         Movie movie = optionalMovie.get();
 
         movie.setMovieName(movieName.or(movie.getMovieName()));
-        if(ids.isPresent()) movie.setActors(getActorsByIds(ids.get()));
+        if(actors.isPresent()) movie.setActors(actors.get());
 
         movieDao.update(movie);
         return new Saying("Updated : " + movie.toString());

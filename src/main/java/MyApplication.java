@@ -11,9 +11,6 @@ import models.Movie;
 import resources.ActorResource;
 import resources.MovieResource;
 
-/**
- * Created by VanDavv on 2015-12-12.
- */
 public class MyApplication extends Application<MyConfiguration> {
 
     private final HibernateBundle<MyConfiguration> hibernateBundle =
@@ -45,7 +42,7 @@ public class MyApplication extends Application<MyConfiguration> {
         final MovieDAO movieDAO = new MovieDAO(hibernateBundle.getSessionFactory());
         final ActorDAO actorDAO = new ActorDAO(hibernateBundle.getSessionFactory());
 
-        final MovieResource movieResource = new MovieResource(movieDAO, actorDAO);
+        final MovieResource movieResource = new MovieResource(movieDAO);
         final ActorResource actorResource = new ActorResource(actorDAO);
 
         environment.jersey().register(movieResource);
