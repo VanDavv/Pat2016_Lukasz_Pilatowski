@@ -1,11 +1,8 @@
 package api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.MoreObjects;
-import org.hibernate.validator.constraints.Length;
 
 public class Saying {
-    @Length(max = 3)
     private String content;
 
     public Saying() {
