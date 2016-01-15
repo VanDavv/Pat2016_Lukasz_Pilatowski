@@ -21,39 +21,6 @@ public class MovieResource {
         this.movieDao = movieDao;
     }
 
-//    public static class RequestBody {
-//        public RequestBody() {
-//        }
-//
-//        public RequestBody(String movieName, List<Actor> actors) {
-//            this.movieName = movieName;
-//            this.actors = actors;
-//        }
-//
-//        @JsonProperty("movieName")
-//        private String movieName;
-//
-//        @JsonProperty("actors")
-//        private List<Actor> actors;
-//
-//
-//        public String getMovieName() {
-//            return movieName;
-//        }
-//
-//        public void setMovieName(String movieName) {
-//            this.movieName = movieName;
-//        }
-//
-//        public List<Actor> getActors() {
-//            return actors;
-//        }
-//
-//        public void setActors(List<Actor> actors) {
-//            this.actors = actors;
-//        }
-//    }
-
     @POST
     @UnitOfWork
     public Saying postMovie(Movie movie) {
