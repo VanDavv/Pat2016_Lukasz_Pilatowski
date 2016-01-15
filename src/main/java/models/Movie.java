@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -9,7 +11,9 @@ import java.util.Objects;
 public class Movie {
     private long id;
 
+    @JsonProperty
     private String movieName;
+    @JsonProperty
     private List<Actor> actors;
 
     public Movie() {

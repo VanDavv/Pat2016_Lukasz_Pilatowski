@@ -79,13 +79,7 @@ public class ActorResourceTest {
      public void updateActor() {
         when(DAO.findById(1L)).thenReturn(Optional.of(actor));
         final Response response = RULE.getJerseyTest().target("/actors/1").request().put(
-                Entity.json(
-                        new ActorResource.RequestBody(
-                                actor.getName(),
-                                actor.getBirthDate()
-                        )
-                )
-        );
+                Entity.json(actor));
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(DAO).update(actor);
@@ -95,13 +89,7 @@ public class ActorResourceTest {
     public void updateNotFoundActor() {
         when(DAO.findById(2L)).thenReturn(Optional.<Actor>absent());
         final Response response = RULE.getJerseyTest().target("/actors/2").request().put(
-                Entity.json(
-                        new ActorResource.RequestBody(
-                                actor.getName(),
-                                actor.getBirthDate()
-                        )
-                )
-        );
+                Entity.json(actor));
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
         verify(DAO).findById(2L);
@@ -119,12 +107,7 @@ public class ActorResourceTest {
         Actor any = any(Actor.class);
         when(DAO.create(any)).thenReturn(actor);
         final Response response = RULE.getJerseyTest().target("/actors").request().post(
-                Entity.json(
-                        new ActorResource.RequestBody(
-                                actor.getName(),
-                                actor.getBirthDate()
-                        )
-                )
+                Entity.json(actor)
         );
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());

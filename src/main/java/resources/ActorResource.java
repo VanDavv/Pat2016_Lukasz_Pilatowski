@@ -20,40 +20,26 @@ public class ActorResource {
         this.dao = dao;
     }
 
-    public static class RequestBody {
-        public RequestBody() {
-        }
-
-        public RequestBody(String actorName, String actorBirthDate) {
-            this.actorName = actorName;
-            this.actorBirthDate = actorBirthDate;
-        }
-
-        @JsonProperty("actorName")
-        public String actorName;
-
-        @JsonProperty("actorBirthDate")
-        public String actorBirthDate;
-    }
-
     @POST
     @UnitOfWork
-    public Saying postActor(RequestBody requestBody) {
-        Actor actor = dao.create(new Actor(requestBody.actorName, requestBody.actorBirthDate));
+    public Saying postActor(Actor actor) {
+        dao.create(actor);
         return new Saying("Added : " + actor.toString());
     }
 
     @PUT
     @UnitOfWork
     @Path("/{actorId}")
-    public Saying updateActor(RequestBody requestBody, @PathParam("actorId") long id) {
+    public Saying updateActor(Actor newActor, @PathParam("actorId") long id) {
         Optional<Actor> actorOptional = dao.findById(id);
         if(!actorOptional.isPresent()) {
             throw new NotFoundException("No such  actor.");
         }
         Actor actor = actorOptional.get();
-        if(requestBody.actorName != null) actor.setName(requestBody.actorName);
-        if(requestBody.actorBirthDate != null) actor.setBirthDate(requestBody.actorBirthDate);
+            actor.setId(newActor.getId());
+            actor.setBirthDate(newActor.getBirthDate());
+            actor.setMovie(newActor.getMovie());
+            actor.setName(newActor.getName());
 
         dao.update(actor);
         return new Saying("Updated : " + actor.toString());

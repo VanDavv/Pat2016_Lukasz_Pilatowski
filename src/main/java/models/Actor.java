@@ -9,10 +9,11 @@ import java.util.Objects;
 @Table(name="Actors")
 public class Actor {
     private long id;
-    @JsonProperty(value = "name")
+    @JsonProperty
     private String name;
-    @JsonProperty(value = "birthDate")
+    @JsonProperty
     private String birthDate;
+    @JsonProperty
     private Movie movie;
 
     public Actor() {
@@ -21,6 +22,12 @@ public class Actor {
     public Actor(String name, String birthDate) {
         this.name = name;
         this.birthDate = birthDate;
+    }
+
+    public Actor(String name, String birthDate, Movie movie) {
+        this.name = name;
+        this.birthDate = birthDate;
+        this.movie = movie;
     }
 
     @Id

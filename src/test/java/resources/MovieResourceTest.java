@@ -82,7 +82,7 @@ public class MovieResourceTest {
     @Test
      public void updateMovie() {
         when(DAO.findById(1L)).thenReturn(Optional.of(movie));
-        final Response response = RULE.getJerseyTest().target("/movies/1").request().put(Entity.json(new MovieResource.RequestBody(movie.getMovieName(), movie.getActors())));
+        final Response response = RULE.getJerseyTest().target("/movies/1").request().put(Entity.json(movie));
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(DAO).update(movie);
@@ -91,7 +91,7 @@ public class MovieResourceTest {
     @Test
     public void updateNotFoundMovie() {
         when(DAO.findById(2L)).thenReturn(Optional.<Movie>absent());
-        final Response response = RULE.getJerseyTest().target("/movies/2").request().put(Entity.json(new MovieResource.RequestBody(movie.getMovieName(), movie.getActors())));
+        final Response response = RULE.getJerseyTest().target("/movies/2").request().put(Entity.json(movie));
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
         verify(DAO).findById(2L);
@@ -108,7 +108,7 @@ public class MovieResourceTest {
     public void postMovie() {
         Movie any = any(Movie.class);
         when(DAO.create(any)).thenReturn(movie);
-        final Response response = RULE.getJerseyTest().target("/movies").request().post(Entity.json(new MovieResource.RequestBody(movie.getMovieName(), movie.getActors())));
+        final Response response = RULE.getJerseyTest().target("/movies").request().post(Entity.json(movie));
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
         verify(DAO).create(movie);
