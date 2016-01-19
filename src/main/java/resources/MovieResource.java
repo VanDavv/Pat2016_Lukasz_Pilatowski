@@ -5,7 +5,6 @@ import com.google.common.base.Optional;
 import db.MovieDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 import models.Movie;
-import services.UpdateService;
 
 import javax.ws.rs.*;
 import java.util.List;
@@ -33,8 +32,7 @@ public class MovieResource {
         if(!optionalMovie.isPresent())
             throw new NotFoundException("No such movie");
 
-        Movie movie = new UpdateService().updateMovie(optionalMovie.get(),newMovie);
-        return movieDao.update(movie);
+        return movieDao.update(newMovie);
     }
 
     @DELETE
