@@ -25,6 +25,7 @@ public class ActorResourceTest {
             .setTestContainerFactory(new GrizzlyWebTestContainerFactory())
             .build();
     private Actor actor;
+    private Actor incompleteActor;
 
     @Before
     public void setup() {
@@ -32,6 +33,11 @@ public class ActorResourceTest {
         actor.setId(0L);
         actor.setBirthDate("12-03-2014");
         actor.setName("Karol Marks");
+
+        incompleteActor = new Actor();
+        incompleteActor.setId(0L);
+        incompleteActor.setName(null);
+        incompleteActor.setBirthDate(null);
     }
 
     @After
@@ -104,5 +110,19 @@ public class ActorResourceTest {
         );
 
         assertThat(response.readEntity(Actor.class)).isEqualToComparingFieldByField(actor);
+    }
+    @Test
+    public void postIncompleteActor() {
+        final Response response = RULE.getJerseyTest().target("/actors").request().post(
+                Entity.json(incompleteActor)
+        );
+        assertThat(response.getStatus()).isEqualTo(422);
+    }
+    @Test
+    public void updateIncompleteActor() {
+        final Response response = RULE.getJerseyTest().target("/actors/1").request().put(
+                Entity.json(incompleteActor)
+        );
+        assertThat(response.getStatus()).isEqualTo(422);
     }
 }

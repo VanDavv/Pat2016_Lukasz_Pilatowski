@@ -29,6 +29,7 @@ public class MovieResourceTest {
             .setTestContainerFactory(new GrizzlyWebTestContainerFactory())
             .build();
     private Movie movie;
+    private Movie incompleteMovie;
 
     @Before
     public void setup() {
@@ -36,6 +37,10 @@ public class MovieResourceTest {
         movie.setId(0L);
         movie.setMovieName("TestName");
         movie.setActors(Arrays.asList(new Actor("John","13")));
+
+        incompleteMovie = new Movie();
+        incompleteMovie.setId(0L);
+        incompleteMovie.setMovieName(null);
     }
 
     @After
@@ -104,5 +109,19 @@ public class MovieResourceTest {
         final Response response = RULE.getJerseyTest().target("/movies").request().post(Entity.json(movie));
 
         assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
+    }
+    @Test
+    public void postIncompleteMovie() {
+        final Response response = RULE.getJerseyTest().target("/movies").request().post(
+                Entity.json(incompleteMovie)
+        );
+        assertThat(response.getStatus()).isEqualTo(422);
+    }
+    @Test
+    public void updateIncompleteMovie() {
+        final Response response = RULE.getJerseyTest().target("/movies/1").request().put(
+                Entity.json(incompleteMovie)
+        );
+        assertThat(response.getStatus()).isEqualTo(422);
     }
 }

@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -10,8 +11,10 @@ import java.util.Objects;
 public class Actor {
     private long id;
     @JsonProperty
+    @NotNull
     private String name;
     @JsonProperty
+    @NotNull
     private String birthDate;
     @JsonProperty
     private Movie movie;

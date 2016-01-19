@@ -21,7 +21,7 @@ public class ActorResource {
 
     @POST
     @UnitOfWork
-    public Actor postActor(Actor actor) {
+    public Actor postActor(@Valid Actor actor) {
         return dao.create(actor);
     }
 

@@ -6,6 +6,7 @@ import db.MovieDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 import models.Movie;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import java.util.List;
 
@@ -20,14 +21,14 @@ public class MovieResource {
 
     @POST
     @UnitOfWork
-    public Movie postMovie(Movie movie) {
+    public Movie postMovie(@Valid Movie movie) {
         return movieDao.create(movie);
     }
 
     @PUT
     @UnitOfWork
     @Path("/{movieId}")
-    public Movie updateMovie(Movie newMovie, @PathParam("movieId") long id) {
+    public Movie updateMovie(@Valid Movie newMovie, @PathParam("movieId") long id) {
         Optional<Movie> optionalMovie = movieDao.findById(id);
         if(!optionalMovie.isPresent())
             throw new NotFoundException("No such movie");
