@@ -61,7 +61,7 @@ public class ActorResourceTest {
         when(DAO.delete(1L)).thenReturn(Optional.of(actor));
         final Response response = RULE.getJerseyTest().target("/actors/1").request().delete();
 
-        assertThat(response.readEntity(Actor.class)).isEqualToComparingFieldByField(actor);
+        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test

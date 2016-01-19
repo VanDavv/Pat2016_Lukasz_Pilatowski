@@ -65,7 +65,7 @@ public class MovieResourceTest {
         when(DAO.delete(1L)).thenReturn(Optional.of(movie));
         final Response response = RULE.getJerseyTest().target("/movies/1").request().delete();
 
-        assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
+        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test

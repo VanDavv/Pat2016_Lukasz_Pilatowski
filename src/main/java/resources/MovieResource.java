@@ -40,12 +40,12 @@ public class MovieResource {
     @DELETE
     @UnitOfWork
     @Path("/{movieId}")
-    public Movie deleteMovie(@PathParam("movieId") long id) {
+    public void deleteMovie(@PathParam("movieId") long id) {
         Optional<Movie> movieOptional = movieDao.delete(id);
         if(!movieOptional.isPresent()) {
             throw new NotFoundException("No such  movie.");
         }
-        return movieOptional.get();
+        return;
     }
     @GET
     @Timed

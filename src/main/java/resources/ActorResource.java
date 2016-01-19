@@ -40,12 +40,12 @@ public class ActorResource {
     @DELETE
     @UnitOfWork
     @Path("/{actorId}")
-    public Actor deleteActor(@PathParam("actorId") long id) {
+    public void deleteActor(@PathParam("actorId") long id) {
         Optional<Actor> actorOptional = dao.delete(id);
         if(!actorOptional.isPresent()) {
             throw new NotFoundException("No such  actor.");
         }
-        return actorOptional.get();
+        return;
     }
     @GET
     @Timed
