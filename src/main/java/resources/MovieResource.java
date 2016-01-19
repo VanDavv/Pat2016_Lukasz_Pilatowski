@@ -1,12 +1,9 @@
 package resources;
 
-import api.Saying;
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import db.MovieDAO;
 import io.dropwizard.hibernate.UnitOfWork;
-import models.Actor;
 import models.Movie;
 
 import javax.ws.rs.*;
@@ -23,15 +20,14 @@ public class MovieResource {
 
     @POST
     @UnitOfWork
-    public Saying postMovie(Movie movie) {
-        movieDao.create(movie);
-        return new Saying("Added : " + movie.toString());
+    public Movie postMovie(Movie movie) {
+        return movieDao.create(movie);
     }
 
     @PUT
     @UnitOfWork
     @Path("/{movieId}")
-    public Saying updateMovie(Movie newMovie, @PathParam("movieId") long id) {
+    public Movie updateMovie(Movie newMovie, @PathParam("movieId") long id) {
         Optional<Movie> optionalMovie = movieDao.findById(id);
         if(!optionalMovie.isPresent())
             throw new NotFoundException("No such movie");
@@ -41,19 +37,19 @@ public class MovieResource {
         movie.setActors(newMovie.getActors());
 
         movieDao.update(movie);
-        return new Saying("Updated : " + movie.toString());
+        return movie;
     }
 
     @DELETE
     @UnitOfWork
     @Path("/{movieId}")
-    public Saying deleteMovie(@PathParam("movieId") long id) {
+    public Movie deleteMovie(@PathParam("movieId") long id) {
         Optional<Movie> movieOptional = movieDao.findById(id);
         if(!movieOptional.isPresent()) {
             throw new NotFoundException("No such  movie.");
         }
         movieDao.delete(id);
-        return new Saying("Deleted movie with id " + id);
+        return movieOptional.get();
     }
     @GET
     @Timed
@@ -66,12 +62,11 @@ public class MovieResource {
     @GET
     @Timed
     @UnitOfWork
-    public Saying getMovie(@PathParam("movieId") long id) {
+    public Movie getMovie(@PathParam("movieId") long id) {
         Optional<Movie> movieOptional = movieDao.findById(id);
         if(!movieOptional.isPresent()) {
             throw new NotFoundException("No such  movie.");
         }
-        Movie movie = movieOptional.get();
-        return new Saying(movie.toString());
+        return movieOptional.get();
     }
 }

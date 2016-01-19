@@ -1,8 +1,6 @@
 package resources;
 
-import api.Saying;
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import db.ActorDAO;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -22,15 +20,14 @@ public class ActorResource {
 
     @POST
     @UnitOfWork
-    public Saying postActor(Actor actor) {
-        dao.create(actor);
-        return new Saying("Added : " + actor.toString());
+    public Actor postActor(Actor actor) {
+        return dao.create(actor);
     }
 
     @PUT
     @UnitOfWork
     @Path("/{actorId}")
-    public Saying updateActor(Actor newActor, @PathParam("actorId") long id) {
+    public Actor updateActor(Actor newActor, @PathParam("actorId") long id) {
         Optional<Actor> actorOptional = dao.findById(id);
         if(!actorOptional.isPresent()) {
             throw new NotFoundException("No such  actor.");
@@ -42,19 +39,19 @@ public class ActorResource {
             actor.setName(newActor.getName());
 
         dao.update(actor);
-        return new Saying("Updated : " + actor.toString());
+        return actor;
     }
 
     @DELETE
     @UnitOfWork
     @Path("/{actorId}")
-    public Saying deleteActor(@PathParam("actorId") long id) {
+    public Actor deleteActor(@PathParam("actorId") long id) {
         Optional<Actor> actorOptional = dao.findById(id);
         if(!actorOptional.isPresent()) {
             throw new NotFoundException("No such  actor.");
         }
         dao.delete(id);
-        return new Saying("Deleted actor with id " + id);
+        return actorOptional.get();
     }
     @GET
     @Timed
@@ -68,12 +65,11 @@ public class ActorResource {
     @Timed
     @UnitOfWork
     @Path("/{actorId}")
-    public Saying getActor(@PathParam("actorId") long id) {
+    public Actor getActor(@PathParam("actorId") long id) {
         Optional<Actor> actorOptional = dao.findById(id);
         if(!actorOptional.isPresent()) {
             throw new NotFoundException("No such  actor.");
         }
-        Actor actor = actorOptional.get();
-        return new Saying(actor.toString());
+        return actorOptional.get();
     }
 }
