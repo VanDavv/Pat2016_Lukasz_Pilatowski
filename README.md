@@ -14,8 +14,6 @@ Prerequisites:
 
 ## Testing
 
-### Note that all fields submited to application are optional. You can sent empty json as well.
-
 * Create new actor
 
 		curl -v http://localhost:8080/actors \
