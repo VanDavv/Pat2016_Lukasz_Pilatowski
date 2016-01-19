@@ -45,8 +45,7 @@ public class ActorResourceTest {
 
         final Response response = RULE.getJerseyTest().target("/actors/1").request().get();
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).findById(1L);
+        assertThat(response.readEntity(Actor.class)).isEqualToComparingFieldByField(actor);
     }
 
     @Test
@@ -55,34 +54,31 @@ public class ActorResourceTest {
         final Response response = RULE.getJerseyTest().target("/actors/2").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(DAO).findById(2L);
     }
 
     @Test
     public void deleteActor() {
-        when(DAO.findById(1L)).thenReturn(Optional.of(actor));
+        when(DAO.delete(1L)).thenReturn(Optional.of(actor));
         final Response response = RULE.getJerseyTest().target("/actors/1").request().delete();
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).delete(1L);
+        assertThat(response.readEntity(Actor.class)).isEqualToComparingFieldByField(actor);
     }
 
     @Test
     public void deleteNotFoundActor() {
-        when(DAO.findById(2L)).thenReturn(Optional.<Actor>absent());
+        when(DAO.delete(2L)).thenReturn(Optional.<Actor>absent());
         final Response response = RULE.getJerseyTest().target("/actors/2").request().delete();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(DAO).findById(2L);
     }
     @Test
      public void updateActor() {
         when(DAO.findById(1L)).thenReturn(Optional.of(actor));
+        when(DAO.update(actor)).thenReturn(actor);
         final Response response = RULE.getJerseyTest().target("/actors/1").request().put(
                 Entity.json(actor));
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).update(actor);
+        assertThat(response.readEntity(Actor.class)).isEqualToComparingFieldByField(actor);
     }
 
     @Test
@@ -92,7 +88,6 @@ public class ActorResourceTest {
                 Entity.json(actor));
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(DAO).findById(2L);
     }
     @Test
     public void getActors() {
@@ -100,17 +95,14 @@ public class ActorResourceTest {
         final Response response = RULE.getJerseyTest().target("/actors").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).findAll();
     }
     @Test
     public void postActor() {
-        Actor any = any(Actor.class);
-        when(DAO.create(any)).thenReturn(actor);
+        when(DAO.create(actor)).thenReturn(actor);
         final Response response = RULE.getJerseyTest().target("/actors").request().post(
                 Entity.json(actor)
         );
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).create(actor);
+        assertThat(response.readEntity(Actor.class)).isEqualToComparingFieldByField(actor);
     }
 }

@@ -49,8 +49,7 @@ public class MovieResourceTest {
 
         final Response response = RULE.getJerseyTest().target("/movies/1").request().get();
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).findById(1L);
+        assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
     }
 
     @Test
@@ -59,33 +58,30 @@ public class MovieResourceTest {
         final Response response = RULE.getJerseyTest().target("/movies/2").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(DAO).findById(2L);
     }
 
     @Test
     public void deleteMovie() {
-        when(DAO.findById(1L)).thenReturn(Optional.of(movie));
+        when(DAO.delete(1L)).thenReturn(Optional.of(movie));
         final Response response = RULE.getJerseyTest().target("/movies/1").request().delete();
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).delete(1L);
+        assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
     }
 
     @Test
     public void deleteNotFoundMovie() {
-        when(DAO.findById(2L)).thenReturn(Optional.<Movie>absent());
+        when(DAO.delete(2L)).thenReturn(Optional.<Movie>absent());
         final Response response = RULE.getJerseyTest().target("/movies/2").request().delete();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(DAO).findById(2L);
     }
     @Test
      public void updateMovie() {
         when(DAO.findById(1L)).thenReturn(Optional.of(movie));
+        when(DAO.update(movie)).thenReturn(movie);
         final Response response = RULE.getJerseyTest().target("/movies/1").request().put(Entity.json(movie));
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).update(movie);
+        assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
     }
 
     @Test
@@ -94,7 +90,6 @@ public class MovieResourceTest {
         final Response response = RULE.getJerseyTest().target("/movies/2").request().put(Entity.json(movie));
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
-        verify(DAO).findById(2L);
     }
     @Test
     public void getMovies() {
@@ -102,15 +97,12 @@ public class MovieResourceTest {
         final Response response = RULE.getJerseyTest().target("/movies").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).findAll();
     }
     @Test
     public void postMovie() {
-        Movie any = any(Movie.class);
-        when(DAO.create(any)).thenReturn(movie);
+        when(DAO.create(movie)).thenReturn(movie);
         final Response response = RULE.getJerseyTest().target("/movies").request().post(Entity.json(movie));
 
-        assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
-        verify(DAO).create(movie);
+        assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
     }
 }

@@ -26,11 +26,12 @@ public class MovieDAO extends AbstractDAO<Movie> {
         return list(currentSession().createCriteria(Movie.class));
     }
 
-    public void delete(Long id) {
+    public Optional<Movie> delete(Long id) {
         Optional<Movie> movie = Optional.fromNullable(get(id));
         if(movie.isPresent()) {
-            currentSession().delete(get(id));
+            currentSession().delete(movie.get());
         }
+        return movie;
     }
     public Movie update(Movie movie) {
         return persist(movie);

@@ -5,6 +5,7 @@ import com.google.common.base.Optional;
 import db.MovieDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 import models.Movie;
+import services.UpdateService;
 
 import javax.ws.rs.*;
 import java.util.List;
@@ -31,24 +32,19 @@ public class MovieResource {
         Optional<Movie> optionalMovie = movieDao.findById(id);
         if(!optionalMovie.isPresent())
             throw new NotFoundException("No such movie");
-        Movie movie = optionalMovie.get();
 
-        movie.setMovieName(newMovie.getMovieName());
-        movie.setActors(newMovie.getActors());
-
-        movieDao.update(movie);
-        return movie;
+        Movie movie = new UpdateService().updateMovie(optionalMovie.get(),newMovie);
+        return movieDao.update(movie);
     }
 
     @DELETE
     @UnitOfWork
     @Path("/{movieId}")
     public Movie deleteMovie(@PathParam("movieId") long id) {
-        Optional<Movie> movieOptional = movieDao.findById(id);
+        Optional<Movie> movieOptional = movieDao.delete(id);
         if(!movieOptional.isPresent()) {
             throw new NotFoundException("No such  movie.");
         }
-        movieDao.delete(id);
         return movieOptional.get();
     }
     @GET

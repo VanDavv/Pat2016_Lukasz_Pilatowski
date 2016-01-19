@@ -26,12 +26,12 @@ public class ActorDAO extends AbstractDAO<Actor> {
         return list(currentSession().createCriteria(Actor.class));
     }
 
-    public void delete(Long id) {
+    public Optional<Actor> delete(Long id) {
         Optional<Actor> actor = Optional.fromNullable(get(id));
         if(actor.isPresent()) {
-            Actor o = get(id);
-            currentSession().delete(o);
+            currentSession().delete(actor.get());
         }
+        return actor;
     }
     public Actor update(Actor actor) {
         return persist(actor);

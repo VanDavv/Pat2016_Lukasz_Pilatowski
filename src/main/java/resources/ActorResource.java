@@ -5,6 +5,7 @@ import com.google.common.base.Optional;
 import db.ActorDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 import models.Actor;
+import services.UpdateService;
 
 import javax.ws.rs.*;
 import java.util.List;
@@ -32,25 +33,18 @@ public class ActorResource {
         if(!actorOptional.isPresent()) {
             throw new NotFoundException("No such  actor.");
         }
-        Actor actor = actorOptional.get();
-            actor.setId(newActor.getId());
-            actor.setBirthDate(newActor.getBirthDate());
-            actor.setMovie(newActor.getMovie());
-            actor.setName(newActor.getName());
-
-        dao.update(actor);
-        return actor;
+        Actor actor = new UpdateService().updateActor(actorOptional.get(), newActor);
+        return dao.update(actor);
     }
 
     @DELETE
     @UnitOfWork
     @Path("/{actorId}")
     public Actor deleteActor(@PathParam("actorId") long id) {
-        Optional<Actor> actorOptional = dao.findById(id);
+        Optional<Actor> actorOptional = dao.delete(id);
         if(!actorOptional.isPresent()) {
             throw new NotFoundException("No such  actor.");
         }
-        dao.delete(id);
         return actorOptional.get();
     }
     @GET
