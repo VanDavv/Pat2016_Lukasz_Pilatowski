@@ -49,6 +49,7 @@ public class MyApplication extends Application<MyConfiguration> {
     @Override
     public void initialize(Bootstrap<MyConfiguration> bootstrap){
         bootstrap.addBundle(hibernateBundle);
+        bootstrap.addBundle(movieProvider);
     }
 
 
