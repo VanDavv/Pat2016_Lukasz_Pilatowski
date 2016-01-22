@@ -1,3 +1,4 @@
+import bundle.MovieBundle;
 import conf.MyConfiguration;
 import db.ActorDAO;
 import db.MovieDAO;
@@ -11,6 +12,9 @@ import models.Movie;
 import resources.ActorResource;
 import resources.MovieResource;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public class MyApplication extends Application<MyConfiguration> {
 
     private final HibernateBundle<MyConfiguration> hibernateBundle =
@@ -18,6 +22,19 @@ public class MyApplication extends Application<MyConfiguration> {
                 @Override
                 public DataSourceFactory getDataSourceFactory(MyConfiguration configuration) {
                     return configuration.getDataSourceFactory();
+                }
+            };
+
+    private final MovieBundle<MyConfiguration> movieProvider =
+            new MovieBundle<MyConfiguration>() {
+                @Override
+                public URI getResourceURI(MyConfiguration configuration) {
+                    try {
+                        return new URI(configuration.getMovieProviderURL());
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("URISyntaxException");
+                    }
                 }
             };
 
