@@ -1,4 +1,3 @@
-import bundle.MovieBundle;
 import conf.MyConfiguration;
 import db.ActorDAO;
 import db.MovieDAO;

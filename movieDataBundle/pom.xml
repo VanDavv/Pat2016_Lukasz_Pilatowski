@@ -1,21 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>Zadanie1</artifactId>
+        <groupId>initial</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>initial</groupId>
-    <artifactId>Zadanie1</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>movieDataBundle</module>
-    </modules>
-    <properties>
-        <dropwizard.version>1.0.0-SNAPSHOT</dropwizard.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+    <artifactId>movieDataBundle</artifactId>
 
     <dependencies>
         <dependency>
@@ -63,5 +56,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

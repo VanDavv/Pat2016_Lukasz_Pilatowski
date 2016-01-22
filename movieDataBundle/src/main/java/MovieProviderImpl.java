@@ -1,5 +1,3 @@
-package bundle;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -26,6 +24,6 @@ class MovieProviderImpl implements MovieProvider {
                 .buildGet()
                 .invoke()
                 .readEntity(MovieRepresentation.class);
-        return representation.convertToMovie(); //TODO implement me
+        return representation.convertToMovie();
     }
 }

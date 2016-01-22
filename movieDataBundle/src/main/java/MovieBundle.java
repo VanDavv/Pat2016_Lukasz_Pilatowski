@@ -1,10 +1,9 @@
-package bundle;
-
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.UriBuilder;
@@ -19,6 +18,7 @@ public abstract class MovieBundle<E extends Configuration> implements Configured
     @Override
     public void run(E myConfiguration, Environment environment) throws Exception {
         client = JerseyClientBuilder.newBuilder().build();
+        uriBuilder = new JerseyUriBuilder();
         uriBuilder.uri(getResourceURI(myConfiguration));
     }
 
