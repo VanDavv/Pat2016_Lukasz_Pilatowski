@@ -1,8 +1,8 @@
-package db;
+package com.blstream.patronage.app.db;
 
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
-import models.Movie;
+import com.blstream.patronage.app.model.Movie;
 import org.hibernate.SessionFactory;
 
 import java.util.List;

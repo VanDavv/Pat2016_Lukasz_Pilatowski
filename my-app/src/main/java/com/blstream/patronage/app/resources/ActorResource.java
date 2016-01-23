@@ -1,10 +1,10 @@
-package resources;
+package com.blstream.patronage.app.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
-import db.ActorDAO;
+import com.blstream.patronage.app.db.ActorDAO;
 import io.dropwizard.hibernate.UnitOfWork;
-import models.Actor;
+import com.blstream.patronage.app.model.Actor;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;

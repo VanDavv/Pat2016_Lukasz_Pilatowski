@@ -1,10 +1,11 @@
-package resources;
+package com.blstream.patronage.app.resources;
 
+import com.blstream.patronage.movieDataBundle.MovieProvider;
 import com.google.common.base.Optional;
-import db.MovieDAO;
+import com.blstream.patronage.app.db.MovieDAO;
 import io.dropwizard.testing.junit.ResourceTestRule;
-import models.Actor;
-import models.Movie;
+import com.blstream.patronage.app.model.Actor;
+import com.blstream.patronage.app.model.Movie;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -22,10 +23,13 @@ import static org.mockito.Mockito.*;
  * Created by 304-03 on 2015-12-14.
  */
 public class MovieResourceTest {
+
     private static final MovieDAO DAO = mock(MovieDAO.class);
+    private static final MovieProvider MOVIE_PROVIDER = mock(MovieProvider.class);
+
     @ClassRule
     public static final ResourceTestRule RULE = ResourceTestRule.builder()
-            .addResource(new MovieResource(DAO))
+            .addResource(new MovieResource(DAO, MOVIE_PROVIDER))
             .setTestContainerFactory(new GrizzlyWebTestContainerFactory())
             .build();
     private Movie movie;

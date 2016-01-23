@@ -1,3 +1,5 @@
+package com.blstream.patronage.movieDataBundle;
+
 import java.net.URI;
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package resources;
+package com.blstream.patronage.app.resources;
 
 import com.google.common.base.Optional;
-import db.ActorDAO;
+import com.blstream.patronage.app.db.ActorDAO;
 import io.dropwizard.testing.junit.ResourceTestRule;
-import models.Actor;
+import com.blstream.patronage.app.model.Actor;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.junit.After;
 import org.junit.Before;

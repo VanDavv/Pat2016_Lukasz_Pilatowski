@@ -1,3 +1,5 @@
+package com.blstream.patronage.movieDataBundle;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
