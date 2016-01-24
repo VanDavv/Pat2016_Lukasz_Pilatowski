@@ -1,4 +1,4 @@
-package conf;
+package com.blstream.patronage.app.conf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;

@@ -1,3 +1,5 @@
+package com.blstream.patronage.movieDataBundle;
+
 /**
  * Created by VanDavv on 2016-01-21.
  */

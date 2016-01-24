@@ -1,8 +1,10 @@
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.blstream.patronage.movieDataBundle;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import static java.lang.Math.pow;
 
@@ -117,7 +119,16 @@ class MovieRepresentation {
     }
 
     public List<Genres> getGenre() {
+/*
+    TODO java 8?
+        return Arrays.asList(genre.split(","))
+                .stream()
+                .map(Genres::valueOf)
+                .collect(Collectors.toList());
+*/
+
         List<Genres> list = new ArrayList<>();
+
         String[] strings = genre.split(",");
 
         for(String s : strings) {

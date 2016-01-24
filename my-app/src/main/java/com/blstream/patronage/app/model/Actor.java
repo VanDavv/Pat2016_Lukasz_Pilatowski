@@ -1,4 +1,4 @@
-package models;
+package com.blstream.patronage.app.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,18 +1,22 @@
-import conf.MyConfiguration;
-import db.ActorDAO;
-import db.MovieDAO;
+package com.blstream.patronage.app;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import com.blstream.patronage.app.conf.MyConfiguration;
+import com.blstream.patronage.app.db.ActorDAO;
+import com.blstream.patronage.app.db.MovieDAO;
+import com.blstream.patronage.app.model.Actor;
+import com.blstream.patronage.app.model.Movie;
+import com.blstream.patronage.app.resources.ActorResource;
+import com.blstream.patronage.app.resources.MovieResource;
+import com.blstream.patronage.movieDataBundle.MovieBundle;
+
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import models.Actor;
-import models.Movie;
-import resources.ActorResource;
-import resources.MovieResource;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class MyApplication extends Application<MyConfiguration> {
 
@@ -24,7 +28,7 @@ public class MyApplication extends Application<MyConfiguration> {
                 }
             };
 
-    private final MovieBundle<MyConfiguration> movieProvider =
+    private final MovieBundle<MyConfiguration> movieBundle =
             new MovieBundle<MyConfiguration>() {
                 @Override
                 public URI getResourceURI(MyConfiguration configuration) {
@@ -42,16 +46,15 @@ public class MyApplication extends Application<MyConfiguration> {
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "MyApp";
     }
 
     @Override
-    public void initialize(Bootstrap<MyConfiguration> bootstrap){
+    public void initialize(Bootstrap<MyConfiguration> bootstrap) {
         bootstrap.addBundle(hibernateBundle);
-        bootstrap.addBundle(movieProvider);
+        bootstrap.addBundle(movieBundle);
     }
-
 
 
     @Override
@@ -59,7 +62,7 @@ public class MyApplication extends Application<MyConfiguration> {
         final MovieDAO movieDAO = new MovieDAO(hibernateBundle.getSessionFactory());
         final ActorDAO actorDAO = new ActorDAO(hibernateBundle.getSessionFactory());
 
-        final MovieResource movieResource = new MovieResource(movieDAO);
+        final MovieResource movieResource = new MovieResource(movieDAO, movieBundle.getMovieProvider());
         final ActorResource actorResource = new ActorResource(actorDAO);
 
         environment.jersey().register(movieResource);
