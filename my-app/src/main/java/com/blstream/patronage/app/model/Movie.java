@@ -20,8 +20,7 @@ public class Movie {
     private List<Actor> actors;
     private com.blstream.patronage.movieDataBundle.Movie detailedMovieData;
 
-    public Movie() {
-    }
+    public Movie() {}
 
     public Movie(String movieName, List<Actor> actors) {
         this.movieName = movieName;
