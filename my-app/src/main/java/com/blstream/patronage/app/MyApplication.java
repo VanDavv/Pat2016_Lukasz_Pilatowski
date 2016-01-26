@@ -42,7 +42,7 @@ public class MyApplication extends Application<MyConfiguration> {
             };
 
     public static void main(String[] args) throws Exception {
-        new MyApplication().run("server", "configuration.yml");
+        new MyApplication().run("server", "my-app/configuration.yml");
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.blstream.patronage.app.resources;
 
+import com.blstream.patronage.app.exceptions.DataAccessException;
 import com.blstream.patronage.movieDataBundle.MovieProvider;
-import com.google.common.base.Optional;
 import com.blstream.patronage.app.db.MovieDAO;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import com.blstream.patronage.app.model.Actor;
@@ -53,8 +53,8 @@ public class MovieResourceTest {
     }
 
     @Test
-    public void getMovie() {
-        when(DAO.findById(1L)).thenReturn(Optional.of(movie));
+    public void getMovie() throws DataAccessException {
+        when(DAO.findById(1L)).thenReturn(movie);
 
         final Response response = RULE.getJerseyTest().target("/movies/1").request().get();
 
@@ -62,40 +62,40 @@ public class MovieResourceTest {
     }
 
     @Test
-    public void getMovieNotFound() {
-        when(DAO.findById(2L)).thenReturn(Optional.<Movie>absent());
+    public void getMovieNotFound() throws DataAccessException {
+        when(DAO.findById(2L)).thenThrow(new DataAccessException("Test error"));
         final Response response = RULE.getJerseyTest().target("/movies/2").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test
-    public void deleteMovie() {
-        when(DAO.delete(1L)).thenReturn(Optional.of(movie));
+    public void deleteMovie() throws DataAccessException {
+        doNothing().when(DAO).delete(1L);
         final Response response = RULE.getJerseyTest().target("/movies/1").request().delete();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test
-    public void deleteNotFoundMovie() {
-        when(DAO.delete(2L)).thenReturn(Optional.<Movie>absent());
+    public void deleteNotFoundMovie() throws DataAccessException {
+        doThrow(new DataAccessException("Test error")).when(DAO).delete(2L);
         final Response response = RULE.getJerseyTest().target("/movies/2").request().delete();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
     @Test
-     public void updateMovie() {
-        when(DAO.findById(1L)).thenReturn(Optional.of(movie));
-        when(DAO.update(movie)).thenReturn(movie);
+     public void updateMovie() throws DataAccessException {
+        when(DAO.findById(1L)).thenReturn(movie);
+        when(DAO.update(any(Movie.class))).thenReturn(movie);
         final Response response = RULE.getJerseyTest().target("/movies/1").request().put(Entity.json(movie));
 
         assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
     }
 
     @Test
-    public void updateNotFoundMovie() {
-        when(DAO.findById(2L)).thenReturn(Optional.<Movie>absent());
+    public void updateNotFoundMovie() throws DataAccessException {
+        when(DAO.findById(2L)).thenThrow(new DataAccessException("Test error"));
         final Response response = RULE.getJerseyTest().target("/movies/2").request().put(Entity.json(movie));
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());

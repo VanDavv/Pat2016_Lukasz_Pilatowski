@@ -1,6 +1,7 @@
 package com.blstream.patronage.app.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ public class Movie {
     private String movieName;
     @JsonProperty
     private List<Actor> actors;
+    private com.blstream.patronage.movieDataBundle.Movie detailedMovieData;
 
     public Movie() {
     }
@@ -35,6 +37,9 @@ public class Movie {
     public void setActors(List<Actor> actors) {
         this.actors = actors;
     }
+    public void setDetailedMovieData(com.blstream.patronage.movieDataBundle.Movie detailedMovieData) {
+        this.detailedMovieData = detailedMovieData;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +57,13 @@ public class Movie {
     public List<Actor> getActors() {
         return actors;
     }
+
+    @Type(type = "serializable")
+    @Column(name = "movieDetailsObject")
+    public com.blstream.patronage.movieDataBundle.Movie getDetailedMovieData() {
+        return detailedMovieData;
+    }
+
 
 
     @Override

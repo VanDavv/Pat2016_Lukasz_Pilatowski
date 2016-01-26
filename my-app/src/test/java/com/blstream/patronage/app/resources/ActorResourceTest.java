@@ -1,5 +1,6 @@
 package com.blstream.patronage.app.resources;
 
+import com.blstream.patronage.app.exceptions.DataAccessException;
 import com.google.common.base.Optional;
 import com.blstream.patronage.app.db.ActorDAO;
 import io.dropwizard.testing.junit.ResourceTestRule;
@@ -46,8 +47,8 @@ public class ActorResourceTest {
     }
 
     @Test
-    public void getActor() {
-        when(DAO.findById(1L)).thenReturn(Optional.of(actor));
+    public void getActor() throws DataAccessException {
+        when(DAO.findById(1L)).thenReturn(actor);
 
         final Response response = RULE.getJerseyTest().target("/actors/1").request().get();
 
@@ -55,32 +56,32 @@ public class ActorResourceTest {
     }
 
     @Test
-    public void getActorNotFound() {
-        when(DAO.findById(2L)).thenReturn(Optional.<Actor>absent());
+    public void getActorNotFound() throws DataAccessException {
+        when(DAO.findById(2L)).thenThrow(new DataAccessException("Test error"));
         final Response response = RULE.getJerseyTest().target("/actors/2").request().get();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test
-    public void deleteActor() {
-        when(DAO.delete(1L)).thenReturn(Optional.of(actor));
+    public void deleteActor() throws DataAccessException {
+        doNothing().when(DAO).delete(1L);
         final Response response = RULE.getJerseyTest().target("/actors/1").request().delete();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test
-    public void deleteNotFoundActor() {
-        when(DAO.delete(2L)).thenReturn(Optional.<Actor>absent());
+    public void deleteNotFoundActor() throws DataAccessException {
+        doThrow(new DataAccessException("Test error")).when(DAO).delete(2L);
         final Response response = RULE.getJerseyTest().target("/actors/2").request().delete();
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
     @Test
-     public void updateActor() {
-        when(DAO.findById(1L)).thenReturn(Optional.of(actor));
-        when(DAO.update(actor)).thenReturn(actor);
+     public void updateActor() throws DataAccessException {
+        when(DAO.findById(1L)).thenReturn(actor);
+        when(DAO.update(any(Actor.class))).thenReturn(actor);
         final Response response = RULE.getJerseyTest().target("/actors/1").request().put(
                 Entity.json(actor));
 
@@ -88,8 +89,8 @@ public class ActorResourceTest {
     }
 
     @Test
-    public void updateNotFoundActor() {
-        when(DAO.findById(2L)).thenReturn(Optional.<Actor>absent());
+    public void updateNotFoundActor() throws DataAccessException {
+        when(DAO.findById(2L)).thenThrow(new DataAccessException("Test error"));
         final Response response = RULE.getJerseyTest().target("/actors/2").request().put(
                 Entity.json(actor));
 

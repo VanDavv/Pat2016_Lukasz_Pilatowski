@@ -1,7 +1,7 @@
 package com.blstream.patronage.app.resources;
 
+import com.blstream.patronage.app.exceptions.DataAccessException;
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Optional;
 import com.blstream.patronage.app.db.ActorDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 import com.blstream.patronage.app.model.Actor;
@@ -29,9 +29,11 @@ public class ActorResource {
     @UnitOfWork
     @Path("/{actorId}")
     public Actor updateActor(@Valid Actor newActor, @PathParam("actorId") long id) {
-        Optional<Actor> actorOptional = dao.findById(id);
-        if(!actorOptional.isPresent()) {
-            throw new NotFoundException("No such  actor.");
+        try {
+            dao.findById(id);
+            newActor.setId(id);
+        } catch (DataAccessException e) {
+            throw new NotFoundException(e.getMessage());
         }
         return dao.update(newActor);
     }
@@ -40,11 +42,11 @@ public class ActorResource {
     @UnitOfWork
     @Path("/{actorId}")
     public void deleteActor(@PathParam("actorId") long id) {
-        Optional<Actor> actorOptional = dao.delete(id);
-        if(!actorOptional.isPresent()) {
-            throw new NotFoundException("No such  actor.");
+        try {
+            dao.delete(id);
+        } catch (DataAccessException e) {
+            throw new NotFoundException(e.getMessage());
         }
-        return;
     }
     @GET
     @Timed
@@ -59,10 +61,12 @@ public class ActorResource {
     @UnitOfWork
     @Path("/{actorId}")
     public Actor getActor(@PathParam("actorId") long id) {
-        Optional<Actor> actorOptional = dao.findById(id);
-        if(!actorOptional.isPresent()) {
-            throw new NotFoundException("No such  actor.");
+        Actor actor = null;
+        try {
+            actor = dao.findById(id);
+        } catch (DataAccessException e) {
+            throw new NotFoundException(e.getMessage());
         }
-        return actorOptional.get();
+        return actor;
     }
 }

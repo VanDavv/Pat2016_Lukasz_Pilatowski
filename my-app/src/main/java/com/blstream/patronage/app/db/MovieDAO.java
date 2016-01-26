@@ -1,5 +1,6 @@
 package com.blstream.patronage.app.db;
 
+import com.blstream.patronage.app.exceptions.DataAccessException;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
 import com.blstream.patronage.app.model.Movie;
@@ -14,8 +15,11 @@ public class MovieDAO extends AbstractDAO<Movie> {
     public MovieDAO(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
-    public Optional<Movie> findById(Long id) {
-        return Optional.fromNullable(get(id));
+    public Movie findById(Long id) throws DataAccessException {
+        if(get(id) == null) {
+            throw new DataAccessException("Movie not found!");
+        }
+        return get(id);
     }
 
     public Movie create(Movie movie) {
@@ -26,12 +30,9 @@ public class MovieDAO extends AbstractDAO<Movie> {
         return list(currentSession().createCriteria(Movie.class));
     }
 
-    public Optional<Movie> delete(Long id) {
-        Optional<Movie> movie = Optional.fromNullable(get(id));
-        if(movie.isPresent()) {
-            currentSession().delete(movie.get());
-        }
-        return movie;
+    public void delete(Long id) throws DataAccessException {
+        Movie movie = findById(id);
+        currentSession().delete(movie);
     }
     public Movie update(Movie movie) {
         return persist(movie);
