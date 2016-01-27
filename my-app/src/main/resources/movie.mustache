@@ -1,0 +1,58 @@
+<html>
+<head>
+    <title>Movies HTML view</title>
+</head>
+<body>
+<h1>Movies</h1>
+{{#movie}}
+    {{#key}}
+        <div>
+            <p>Movie name: {{name}}</p>
+        </div>
+    {{/key}}
+    {{#value}}
+        <div>
+            <p>Title: {{title}}</p>
+
+            <p>Year: {{year}}</p>
+
+            <p>Rated: {{rated}}</p>
+
+            <p>Released: {{released}}</p>
+
+            <p>Runtime: {{runtime}}</p>
+
+            <p>Genres: {{genres}}</p>
+
+            <p>Director: {{director}}</p>
+
+            <p>Writer: {{writer}}</p>
+
+            <p>Actors: {{actors}}</p>
+
+            <p>Plot: {{plot}}</p>
+
+            <p>Language: {{language}}</p>
+
+            <p>Country: {{country}}</p>
+
+            <p>Awards: {{awards}}</p>
+
+            <p>Poster: {{poster}}</p>
+
+            <p>Metascore: {{metascore}}</p>
+
+            <p>imdbRating: {{imdbRating}}</p>
+
+            <p>imdbVotes: {{imdbVotes}}</p>
+
+            <p>imdbID: {{imdbID}}</p>
+
+            <p>Type: {{type}}</p>
+
+            <p>Response: {{response}}</p>
+        </div>
+    {{/value}}
+{{/movie}}
+</body>
+</html>

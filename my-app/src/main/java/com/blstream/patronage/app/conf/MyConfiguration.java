@@ -7,9 +7,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by VanDavv on 2015-12-12.
- */
 public class MyConfiguration extends Configuration {
 
     @JsonProperty

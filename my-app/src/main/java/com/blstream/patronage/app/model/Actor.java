@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name="Actors")
+@SuppressWarnings("unused")
 public class Actor {
     private long id;
     @JsonProperty
@@ -68,19 +69,6 @@ public class Actor {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Actor actor = (Actor) o;
-
-        if (id != actor.id) return false;
-        if (name != null ? !name.equals(actor.name) : actor.name != null) return false;
-        return !(birthDate != null ? !birthDate.equals(actor.birthDate) : actor.birthDate != null);
-
     }
 
     @Override

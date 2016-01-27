@@ -10,6 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Movies")
+@SuppressWarnings("unused")
 public class Movie {
     private long id;
 
@@ -20,7 +21,9 @@ public class Movie {
     private List<Actor> actors;
     private com.blstream.patronage.movieDataBundle.Movie detailedMovieData;
 
-    public Movie() {}
+    public Movie() {
+
+    }
 
     public Movie(String movieName, List<Actor> actors) {
         this.movieName = movieName;
@@ -61,21 +64,6 @@ public class Movie {
     @Column(name = "movieDetailsObject")
     public com.blstream.patronage.movieDataBundle.Movie getDetailedMovieData() {
         return detailedMovieData;
-    }
-
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Movie movie = (Movie) o;
-
-        if (id != movie.id) return false;
-        if (movieName != null ? !movieName.equals(movie.movieName) : movie.movieName != null) return false;
-        return !(actors != null ? !actors.equals(movie.actors) : movie.actors != null);
-
     }
 
     @Override

@@ -1,19 +1,18 @@
 package com.blstream.patronage.app.resources;
 
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.ws.rs.*;
-
 import com.blstream.patronage.app.db.MovieDAO;
 import com.blstream.patronage.app.exceptions.DataAccessException;
 import com.blstream.patronage.app.model.Movie;
+import com.blstream.patronage.app.views.MovieView;
 import com.blstream.patronage.movieDataBundle.MovieProvider;
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Optional;
-
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
+
+import javax.validation.Valid;
+import javax.ws.rs.*;
+import java.util.Collections;
+import java.util.List;
 
 @Path("/movies")
 @Consumes("application/json")
@@ -81,5 +80,28 @@ public class MovieResource {
             throw new NotFoundException(e.getMessage());
         }
         return movie;
+    }
+
+    @GET
+    @Timed
+    @UnitOfWork
+    @Produces("text/html")
+    public MovieView getMoviesHTML() {
+        return new MovieView(movieDao.findAll());
+    }
+
+    @Path("/{movieId}")
+    @GET
+    @Timed
+    @UnitOfWork
+    @Produces("text/html")
+    public MovieView getMovieHTML(@PathParam("movieId") long id) {
+        Movie movie;
+        try {
+            movie = movieDao.findById(id);
+        } catch (DataAccessException e) {
+            throw new NotFoundException(e.getMessage());
+        }
+        return new MovieView(Collections.singletonList(movie));
     }
 }

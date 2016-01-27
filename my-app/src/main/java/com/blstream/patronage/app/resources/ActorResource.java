@@ -1,13 +1,15 @@
 package com.blstream.patronage.app.resources;
 
-import com.blstream.patronage.app.exceptions.DataAccessException;
-import com.codahale.metrics.annotation.Timed;
 import com.blstream.patronage.app.db.ActorDAO;
-import io.dropwizard.hibernate.UnitOfWork;
+import com.blstream.patronage.app.exceptions.DataAccessException;
 import com.blstream.patronage.app.model.Actor;
+import com.blstream.patronage.app.views.ActorView;
+import com.codahale.metrics.annotation.Timed;
+import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import java.util.Collections;
 import java.util.List;
 
 @Path("/actors")
@@ -61,12 +63,36 @@ public class ActorResource {
     @UnitOfWork
     @Path("/{actorId}")
     public Actor getActor(@PathParam("actorId") long id) {
-        Actor actor = null;
+        Actor actor;
         try {
             actor = dao.findById(id);
         } catch (DataAccessException e) {
             throw new NotFoundException(e.getMessage());
         }
         return actor;
+    }
+
+    @GET
+    @Timed
+    @UnitOfWork
+    @Produces("text/html")
+    public ActorView getActorsHTML() {
+        return new ActorView(dao.findAll());
+    }
+
+
+    @GET
+    @Timed
+    @UnitOfWork
+    @Path("/{actorId}")
+    @Produces("text/html")
+    public ActorView getActorHTML(@PathParam("actorId") long id) {
+        Actor actor;
+        try {
+            actor = dao.findById(id);
+        } catch (DataAccessException e) {
+            throw new NotFoundException(e.getMessage());
+        }
+        return new ActorView(Collections.singletonList(actor));
     }
 }

@@ -1,8 +1,5 @@
 package com.blstream.patronage.app;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import com.blstream.patronage.app.conf.MyConfiguration;
 import com.blstream.patronage.app.db.ActorDAO;
 import com.blstream.patronage.app.db.MovieDAO;
@@ -11,12 +8,15 @@ import com.blstream.patronage.app.model.Movie;
 import com.blstream.patronage.app.resources.ActorResource;
 import com.blstream.patronage.app.resources.MovieResource;
 import com.blstream.patronage.movieDataBundle.MovieBundle;
-
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.views.ViewBundle;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class MyApplication extends Application<MyConfiguration> {
 
@@ -54,6 +54,7 @@ public class MyApplication extends Application<MyConfiguration> {
     public void initialize(Bootstrap<MyConfiguration> bootstrap) {
         bootstrap.addBundle(hibernateBundle);
         bootstrap.addBundle(movieBundle);
+        bootstrap.addBundle(new ViewBundle<>());
     }
 
 

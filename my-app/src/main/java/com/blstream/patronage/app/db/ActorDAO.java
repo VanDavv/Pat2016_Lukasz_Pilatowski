@@ -1,16 +1,12 @@
 package com.blstream.patronage.app.db;
 
 import com.blstream.patronage.app.exceptions.DataAccessException;
-import com.google.common.base.Optional;
-import io.dropwizard.hibernate.AbstractDAO;
 import com.blstream.patronage.app.model.Actor;
+import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-/**
- * Created by VanDavv on 2015-12-13.
- */
 public class ActorDAO extends AbstractDAO<Actor> {
     public ActorDAO(SessionFactory sessionFactory) {
         super(sessionFactory);
