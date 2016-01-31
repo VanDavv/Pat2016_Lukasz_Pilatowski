@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Movies HTML view</title>
@@ -5,12 +6,6 @@
 <body>
 <h1>Movies</h1>
 {{#movie}}
-    {{#key}}
-        <div>
-            <p>Movie name: {{name}}</p>
-        </div>
-    {{/key}}
-    {{#value}}
         <div>
             <p>Title: {{title}}</p>
 
@@ -28,7 +23,15 @@
 
             <p>Writer: {{writer}}</p>
 
-            <p>Actors: {{actors}}</p>
+            <p>Actors: {{detailedActors}}</p>
+
+            More info:
+            <p>
+                {{#actors}}
+                    Name : {{name}}
+                    Birthdate : {{birthDate}}
+                {{/actors}}
+            </p>
 
             <p>Plot: {{plot}}</p>
 
@@ -52,7 +55,6 @@
 
             <p>Response: {{response}}</p>
         </div>
-    {{/value}}
 {{/movie}}
 </body>
 </html>
