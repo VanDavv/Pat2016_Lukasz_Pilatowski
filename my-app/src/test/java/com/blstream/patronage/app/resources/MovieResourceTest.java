@@ -1,11 +1,11 @@
 package com.blstream.patronage.app.resources;
 
-import com.blstream.patronage.app.exceptions.DataAccessException;
-import com.blstream.patronage.movieDataBundle.MovieProvider;
 import com.blstream.patronage.app.db.MovieDAO;
-import io.dropwizard.testing.junit.ResourceTestRule;
+import com.blstream.patronage.app.exceptions.DataAccessException;
 import com.blstream.patronage.app.model.Actor;
 import com.blstream.patronage.app.model.Movie;
+import com.blstream.patronage.movieDataBundle.MovieProvider;
+import io.dropwizard.testing.junit.ResourceTestRule;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -15,6 +15,7 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -39,12 +40,12 @@ public class MovieResourceTest {
     public void setup() {
         movie = new Movie();
         movie.setId(0L);
-        movie.setMovieName("TestName");
-        movie.setActors(Arrays.asList(new Actor("John","13")));
+        movie.setTitle("rubber");
+        movie.setActors(Collections.singletonList(new Actor("John", "13")));
 
         incompleteMovie = new Movie();
         incompleteMovie.setId(0L);
-        incompleteMovie.setMovieName(null);
+        incompleteMovie.setTitle(null);
     }
 
     @After
@@ -58,7 +59,7 @@ public class MovieResourceTest {
 
         final Response response = RULE.getJerseyTest().target("/movies/1").request().get();
 
-        assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
+        assertThat(response.readEntity(Movie.class)).isEqualToComparingOnlyGivenFields(movie);
     }
 
     @Test
@@ -90,7 +91,7 @@ public class MovieResourceTest {
         when(DAO.update(any(Movie.class))).thenReturn(movie);
         final Response response = RULE.getJerseyTest().target("/movies/1").request().put(Entity.json(movie));
 
-        assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
+        assertThat(response.readEntity(Movie.class)).isEqualToComparingOnlyGivenFields(movie);
     }
 
     @Test
@@ -110,9 +111,13 @@ public class MovieResourceTest {
     @Test
     public void postMovie() {
         when(DAO.create(movie)).thenReturn(movie);
+        when(MOVIE_PROVIDER.getMovieData(movie.getTitle())).thenReturn(null);
         final Response response = RULE.getJerseyTest().target("/movies").request().post(Entity.json(movie));
 
-        assertThat(response.readEntity(Movie.class)).isEqualToComparingFieldByField(movie);
+        assertThat(
+                response.
+                        readEntity(Movie.class))
+                .isEqualToIgnoringNullFields(movie);
     }
     @Test
     public void postIncompleteMovie() {

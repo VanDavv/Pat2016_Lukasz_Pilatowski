@@ -30,7 +30,7 @@ public class MovieResource {
     @POST
     @UnitOfWork
     public Movie postMovie(@Valid Movie movie) {
-        movie.setDetailedMovieData(movieProvider.getMovieData(movie.getMovieName()));
+        movie.setDetailedMovieData(movieProvider.getMovieData(movie.getTitle()));
         return movieDao.create(movie);
     }
 
@@ -42,6 +42,7 @@ public class MovieResource {
         try {
             movieDao.findById(movieId.get());
             newMovie.setId(movieId.get());
+            newMovie.setDetailedMovieData(movieProvider.getMovieData(newMovie.getTitle()));
             movie = movieDao.update(newMovie);
         } catch (DataAccessException e) {
             throw new NotFoundException(e.getMessage());
