@@ -26,7 +26,20 @@ import static org.mockito.Mockito.*;
 public class MovieResourceTest {
 
     private static final MovieDAO DAO = mock(MovieDAO.class);
-    private static final MovieProvider MOVIE_PROVIDER = mock(MovieProvider.class);
+    private static final MovieProvider MOVIE_PROVIDER = movieTitle -> {
+        final com.blstream.patronage.movieDataBundle.Movie fake = new com.blstream.patronage.movieDataBundle.Movie();
+        fake.setActors("Booody Harry");
+        fake.setAwards("****");
+        fake.setCountry("Neverland");
+        fake.setDirector("Ben Hakker");
+        fake.setGenres("Horror");
+        fake.setImdbID("123");
+        fake.setImdbVotes(1234L);
+        fake.setLanguage("Latin");
+        // I'm tired: enough
+        // Another possibility: save sample JSON and create fake from it
+        return fake;
+    };
 
     @ClassRule
     public static final ResourceTestRule RULE = ResourceTestRule.builder()
@@ -85,8 +98,9 @@ public class MovieResourceTest {
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
+
     @Test
-     public void updateMovie() throws DataAccessException {
+    public void updateMovie() throws DataAccessException {
         when(DAO.findById(1L)).thenReturn(movie);
         when(DAO.update(any(Movie.class))).thenReturn(movie);
         final Response response = RULE.getJerseyTest().target("/movies/1").request().put(Entity.json(movie));
@@ -101,6 +115,7 @@ public class MovieResourceTest {
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
+
     @Test
     public void getMovies() {
         when(DAO.findAll()).thenReturn(Arrays.asList(movie));
@@ -108,17 +123,21 @@ public class MovieResourceTest {
 
         assertThat(response.getStatusInfo().getStatusCode()).isEqualTo(Response.Status.OK.getStatusCode());
     }
+
     @Test
     public void postMovie() {
-        when(DAO.create(movie)).thenReturn(movie);
-        when(MOVIE_PROVIDER.getMovieData(movie.getTitle())).thenReturn(null);
+        when(DAO.create(any())).thenReturn(movie);
         final Response response = RULE.getJerseyTest().target("/movies").request().post(Entity.json(movie));
 
-        assertThat(
-                response.
-                        readEntity(Movie.class))
-                .isEqualToIgnoringNullFields(movie);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
+        assertThat(response.getLocation()).isNotNull();
+
+        final Movie readEntity = response.readEntity(Movie.class);
+        assertThat(readEntity)
+                .isNotNull()
+                .isEqualTo(movie);
     }
+
     @Test
     public void postIncompleteMovie() {
         final Response response = RULE.getJerseyTest().target("/movies").request().post(
@@ -126,6 +145,7 @@ public class MovieResourceTest {
         );
         assertThat(response.getStatus()).isEqualTo(422);
     }
+
     @Test
     public void updateIncompleteMovie() {
         final Response response = RULE.getJerseyTest().target("/movies/1").request().put(

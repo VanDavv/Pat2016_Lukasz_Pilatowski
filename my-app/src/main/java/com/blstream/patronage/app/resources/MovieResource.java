@@ -11,8 +11,14 @@ import io.dropwizard.jersey.params.LongParam;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkState;
 
 @Path("/movies")
 @Consumes("application/json")
@@ -29,9 +35,14 @@ public class MovieResource {
 
     @POST
     @UnitOfWork
-    public Movie postMovie(@Valid Movie movie) {
+    public Response postMovie(@Valid Movie movie, final @Context UriInfo uriInfo) {
+
         movie.setDetailedMovieData(movieProvider.getMovieData(movie.getTitle()));
-        return movieDao.create(movie);
+
+        final Movie createdMovie = movieDao.create(movie);
+        checkState(createdMovie != null, "Created movie is null.");
+        final URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(createdMovie.getId())).build();
+        return Response.created(location).entity(createdMovie).build();
     }
 
     @PUT
