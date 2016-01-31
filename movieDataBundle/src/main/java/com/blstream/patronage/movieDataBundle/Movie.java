@@ -1,7 +1,6 @@
 package com.blstream.patronage.movieDataBundle;
 
 import java.net.URI;
-import java.util.List;
 
 /**
  * Created by VanDavv on 2016-01-21.
@@ -12,7 +11,7 @@ public class Movie {
     private String rated;
     private String released;
     private int runtime;
-    private List<Genres> genres;
+    private String genres;
     private String director;
     private String writer;
     private String actors;
@@ -68,11 +67,11 @@ public class Movie {
         this.runtime = runtime;
     }
 
-    public List<Genres> getGenres() {
+    public String getGenres() {
         return genres;
     }
 
-    public void setGenres(List<Genres> genres) {
+    public void setGenres(String genres) {
         this.genres = genres;
     }
 
@@ -186,5 +185,31 @@ public class Movie {
 
     public void setResponse(boolean response) {
         this.response = response;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "title='" + title + '\'' +
+                ", year=" + year +
+                ", rated='" + rated + '\'' +
+                ", released='" + released + '\'' +
+                ", runtime=" + runtime +
+                ", genres='" + genres + '\'' +
+                ", director='" + director + '\'' +
+                ", writer='" + writer + '\'' +
+                ", actors='" + actors + '\'' +
+                ", plot='" + plot + '\'' +
+                ", language='" + language + '\'' +
+                ", country='" + country + '\'' +
+                ", awards='" + awards + '\'' +
+                ", poster=" + poster +
+                ", metascore=" + metascore +
+                ", imdbRating=" + imdbRating +
+                ", imdbVotes=" + imdbVotes +
+                ", imdbID='" + imdbID + '\'' +
+                ", type='" + type + '\'' +
+                ", response=" + response +
+                '}';
     }
 }

@@ -1,16 +1,11 @@
 package com.blstream.patronage.movieDataBundle;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.net.URI;
 
 import static java.lang.Math.pow;
 
-/**
- * Created by VanDavv on 2016-01-22.
- */
 class MovieRepresentation {
     @JsonProperty("Title")
     private String title;
@@ -50,7 +45,7 @@ class MovieRepresentation {
     @JsonProperty("Response")
     private String response;
 
-    public Movie convertToMovie(){
+    public Movie convertToMovie() {
         Movie movie = new Movie();
 
         movie.setTitle(getTitle());
@@ -118,131 +113,8 @@ class MovieRepresentation {
         this.runtime = runtime;
     }
 
-    public List<Genres> getGenre() {
-/*
-    TODO java 8?
-        return Arrays.asList(genre.split(","))
-                .stream()
-                .map(Genres::valueOf)
-                .collect(Collectors.toList());
-*/
-
-        List<Genres> list = new ArrayList<>();
-
-        String[] strings = genre.split(",");
-
-        for(String s : strings) {
-            switch(s) {
-                case "Action" : {
-                    list.add(Genres.Action);
-                    break;
-                }
-                case "Adventure" : {
-                    list.add(Genres.Adventure);
-                    break;
-                }
-                case "Animation" : {
-                    list.add(Genres.Animation);
-                    break;
-                }
-                case "Biography" : {
-                    list.add(Genres.Biography);
-                    break;
-                }
-                case "Comedy" : {
-                    list.add(Genres.Comedy);
-                    break;
-                }
-                case "Crime" : {
-                    list.add(Genres.Crime);
-                    break;
-                }
-                case "Documentary" : {
-                    list.add(Genres.Documentary);
-                    break;
-                }
-                case "Drama" : {
-                    list.add(Genres.Drama);
-                    break;
-                }
-                case "Family" : {
-                    list.add(Genres.Family);
-                    break;
-                }
-                case "Fantasy" : {
-                    list.add(Genres.Fantasy);
-                    break;
-                }
-                case "Film-Noir" : {
-                    list.add(Genres.FilmNoir);
-                    break;
-                }
-                case "Game-Show" : {
-                    list.add(Genres.GameShow);
-                    break;
-                }
-                case "History" : {
-                    list.add(Genres.History);
-                    break;
-                }
-                case "Horror" : {
-                    list.add(Genres.Horror);
-                    break;
-                }
-                case "Music" : {
-                    list.add(Genres.Music);
-                    break;
-                }
-                case "Musical" : {
-                    list.add(Genres.Musical);
-                    break;
-                }
-                case "Mystery" : {
-                    list.add(Genres.Mystery);
-                    break;
-                }
-                case "News" : {
-                    list.add(Genres.News);
-                    break;
-                }
-                case "Reality-TV" : {
-                    list.add(Genres.RealityTV);
-                    break;
-                }
-                case "Romance" : {
-                    list.add(Genres.Romance);
-                    break;
-                }
-                case "Sci-Fi" : {
-                    list.add(Genres.SciFi);
-                    break;
-                }
-                case "Sport" : {
-                    list.add(Genres.Sport);
-                    break;
-                }
-                case "Talk-Show" : {
-                    list.add(Genres.TalkShow);
-                    break;
-                }
-                case "Thriller" : {
-                    list.add(Genres.Thriller);
-                    break;
-                }
-                case "War" : {
-                    list.add(Genres.War);
-                    break;
-                }
-                case "Western" : {
-                    list.add(Genres.Western);
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
-        }
-        return list;
+    public String getGenre() {
+        return genre;
     }
 
     public void setGenre(String genre) {
@@ -332,7 +204,7 @@ class MovieRepresentation {
     public long getImdbVotes() {
         String[] split = imdbVotes.split(",");
         long votes = 0;
-        for(int i = 0; i < split.length; i++) {
+        for (int i = 0; i < split.length; i++) {
             votes += pow(1000, i) * Long.parseLong(split[i]);
         }
         return votes;
