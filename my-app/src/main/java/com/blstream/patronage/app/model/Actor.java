@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 @Entity
 @Table(name="Actors")
@@ -72,8 +71,26 @@ public class Actor {
     }
 
     @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Actor actor = (Actor) o;
+
+        if (id != actor.id) return false;
+        if (!name.equals(actor.name)) return false;
+        if (birthDate != null ? !birthDate.equals(actor.birthDate) : actor.birthDate != null) return false;
+        return !(movie != null ? !movie.equals(actor.movie) : actor.movie != null);
+
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(id, name, birthDate);
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
+        result = 31 * result + (movie != null ? movie.hashCode() : 0);
+        return result;
     }
 
     @Override
